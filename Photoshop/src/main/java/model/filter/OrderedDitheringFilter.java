@@ -17,62 +17,50 @@ public class OrderedDitheringFilter implements Filter {
         int w = image.getWidth();
         int h = image.getHeight();
 
-        int qR = clamp(filterModel.getOrderedQuantsR(), 2, 128);
-        int qG = clamp(filterModel.getOrderedQuantsG(), 2, 128);
-        int qB = clamp(filterModel.getOrderedQuantsB(), 2, 128);
+        int qR = filterModel.getOrderedQuantsR();
+        int qG = filterModel.getOrderedQuantsG();
+        int qB = filterModel.getOrderedQuantsB();
 
-        int nR = getKernelSize(qR);
-        int nG = getKernelSize(qG);
-        int nB = getKernelSize(qB);
+        int kernelSize = getKernelSize(qR);
 
-        int[][] bR = bayer(nR);
-        int[][] bG = bayer(nG);
-        int[][] bB = bayer(nB);
+        int[][] bR = bayer(kernelSize);
+        int[][] bG = bayer(kernelSize);
+        int[][] bB = bayer(kernelSize);
+
 
         BufferedImage out = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
 
         for (int y = 0; y < h; y++) {
             for (int x = 0; x < w; x++) {
                 int rgb = image.getRGB(x, y);
-                int a = (rgb >>> 24) & 0xFF;
-                int r = (rgb >>> 16) & 0xFF;
-                int g = (rgb >>> 8) & 0xFF;
+                int a = (rgb >> 24) & 0xFF;
+                int r = (rgb >> 16) & 0xFF;
+                int g = (rgb >> 8) & 0xFF;
                 int b = rgb & 0xFF;
 
-                int rr = orderedQuant(r, qR, bR[y % nR][x % nR], nR);
-                int gg = orderedQuant(g, qG, bG[y % nG][x % nG], nG);
-                int bb = orderedQuant(b, qB, bB[y % nB][x % nB], nB);
+                int rr = orderedQuant(r, qR, bR[y % kernelSize][x % kernelSize], kernelSize);
+                int gg = orderedQuant(g, qG, bG[y % kernelSize][x % kernelSize], kernelSize);
+                int bb = orderedQuant(b, qB, bB[y % kernelSize][x % kernelSize], kernelSize);
 
                 out.setRGB(x, y, (a << 24) | (rr << 16) | (gg << 8) | bb);
             }
         }
+
         return out;
     }
 
     private int orderedQuant(int v, int q, int bayerVal, int n) {
-        float t = ((bayerVal + 0.5f) / (n * n)) - 0.5f;
-
+        float threshold = (((float)bayerVal) / (n * n)) - 0.5f;
         int levels = q - 1;
-
         float step = 255f / levels;
 
-        float vd = v + t * step;
+        float shiftedValue = v + threshold * step;
+        shiftedValue = Math.max(0f, Math.min(shiftedValue, 255f));
 
-        if (vd < 0f) vd = 0f;
-        if (vd > 255f) vd = 255f;
-
-        int idx = Math.round(vd * levels / 255f);
-        if (idx < 0) idx = 0;
-        if (idx > levels) idx = levels;
+        int idx = Math.round(shiftedValue * levels / 255f);
+        idx = Math.max(0, Math.min(idx, levels));
 
         return Math.round(idx * 255f / levels);
-    }
-
-    private static int getKernelSize(int quants) {
-        if (quants <= 4) return 2;
-        if (quants <= 16) return 4;
-        if (quants <= 64) return 8;
-        return 16;
     }
 
     private static int[][] bayer(int n) {
@@ -82,22 +70,31 @@ public class OrderedDitheringFilter implements Filter {
                     {3, 1}
             };
         }
+
         int[][] s = bayer(n / 2);
         int[][] m = new int[n][n];
 
-        for (int y = 0; y < n / 2; y++) {
-            for (int x = 0; x < n / 2; x++) {
-                int v = s[y][x];
-                m[y][x] = 4 * v + 0;
-                m[y][x + n / 2] = 4 * v + 2;
-                m[y + n / 2][x] = 4 * v + 3;
-                m[y + n / 2][x + n / 2] = 4 * v + 1;
+        for (int x = 0; x < n / 2; x++) {
+            for (int y = 0; y < n / 2; y++) {
+                int v = s[x][y];
+                m[x][y] = 4 * v;
+                m[x][y + n / 2] = 4 * v + 2;
+                m[x + n / 2][y] = 4 * v + 3;
+                m[x + n / 2][y + n / 2] = 4 * v + 1;
             }
         }
+
         return m;
     }
 
-    private static int clamp(int v, int lo, int hi) {
-        return Math.max(lo, Math.min(hi, v));
+    private int getKernelSize(int q) {
+        int n = 4;
+        int threshold = 256 / q;
+
+        while (n < threshold) {
+            n *= 2;
+        }
+
+        return n;
     }
 }

@@ -34,11 +34,12 @@ public class MenuController {
     private final GammaSettingDialog gammaSettingsDialog;
     private final SettingsDialog robertsSettingsDialog;
     private final SettingsDialog sobelSettingsDialog;
+    private final SettingsDialog oilPainitingSettingsDialog;
     private final DitheringSettingsDialog ditheringSettingsDialog;
     private final DitheringSettingsDialog orderedDitheringSettingsDialog;
     private final SettingsDialog rotateSettingsDialog;
     private final ResizeSettingsDialog resizeSettingsDialog;
-
+    private final AboutDialog aboutDialog;
 
     public MenuController(FilterModel filterModel, Frame frame, ActionFactory actionFactory) {
         this.filterModel = filterModel;
@@ -61,6 +62,9 @@ public class MenuController {
         sobelSettingsDialog = new SettingsDialog(filterModel, frame, "Sobel Edge Settings", 0, 2040, 350);
         addSobelEdgeFilterListeners();
 
+        oilPainitingSettingsDialog = new SettingsDialog(filterModel, frame, "Oil Painting Settings", 16, 256, 32);
+        addOilPaintingFilterListeners();
+
         ditheringSettingsDialog = new DitheringSettingsDialog(filterModel, frame, "Dithering Settings");
         addDitheringFilterListeners(ditheringSettingsDialog, Type.UNORDERED);
 
@@ -72,6 +76,8 @@ public class MenuController {
 
         resizeSettingsDialog = new ResizeSettingsDialog(frame, filterModel);
         addResizeImageListeners();
+
+        aboutDialog = new AboutDialog(frame);
 
         initActions();
         bindActions();
@@ -98,6 +104,8 @@ public class MenuController {
         actionFactory.addAction(Command.DITHERING, ActionFactory.action("Dithering", this::onDitheringFilter));
         actionFactory.addAction(Command.ORDERED_DITHERING, ActionFactory.action("Ordered dithering", this::onOrderedDithreringFilter));
         actionFactory.addAction(Command.WATERCOLOR, ActionFactory.action("WaterColor", this::onWaterColorFilter));
+        actionFactory.addAction(Command.OIL_PAINTING, ActionFactory.action("OilPainting", this::onOilPaintingFilter));
+        actionFactory.addAction(Command.ABOUT, ActionFactory.action("About", this::onAbout));
     }
 
     private void bindActions() {
@@ -121,6 +129,9 @@ public class MenuController {
         menuBar.getFilterMenu().getDitheringItem().setAction(actionFactory.getAction(Command.DITHERING));
         menuBar.getFilterMenu().getOrderedDitheringItem().setAction(actionFactory.getAction(Command.ORDERED_DITHERING));
         menuBar.getFilterMenu().getWaterColorItem().setAction(actionFactory.getAction(Command.WATERCOLOR));
+        menuBar.getFilterMenu().getOilPaintingItem().setAction(actionFactory.getAction(Command.OIL_PAINTING));
+
+        menuBar.getHelpMenu().getHelpMenuItem().setAction(actionFactory.getAction(Command.ABOUT));
     }
 
     private void bindSliderAndSpinner(JSlider slider, JSpinner spinner) {
@@ -259,6 +270,29 @@ public class MenuController {
         sobelSettingsDialog.getCancelButton().addActionListener(e -> sobelSettingsDialog.setVisible(false));
     }
 
+    private void addOilPaintingFilterListeners() {
+        JSlider slider = oilPainitingSettingsDialog.getSlider();
+        JSpinner spinner = oilPainitingSettingsDialog.getSpinner();
+
+        bindSliderAndSpinner(slider, spinner);
+
+        oilPainitingSettingsDialog.getOkButton().addActionListener(e -> {
+            changeOnFilteredImage();
+
+            toolPanel.getRobertsEdgeFilterItem().setSelected(true);
+            menuBar.getFilterMenu().getOilPaintingItem().setSelected(true);
+
+            filterModel.setOilBinsCount(Integer.parseInt(spinner.getValue().toString()));
+            oilPainitingSettingsDialog.setVisible(false);
+
+            filterModel.applyFilter(new OilPaintingFilter(filterModel));
+
+            imagePanel.repaint();
+        });
+
+        oilPainitingSettingsDialog.getCancelButton().addActionListener(e -> oilPainitingSettingsDialog.setVisible(false));
+    }
+
     private void addRobertsEdgeFilterListeners() {
         JSlider slider = robertsSettingsDialog.getSlider();
         JSpinner spinner = robertsSettingsDialog.getSpinner();
@@ -279,7 +313,7 @@ public class MenuController {
             imagePanel.repaint();
         });
 
-        smoothingSettingsDialog.getCancelButton().addActionListener(e -> robertsSettingsDialog.setVisible(false));
+        robertsSettingsDialog.getCancelButton().addActionListener(e -> robertsSettingsDialog.setVisible(false));
     }
 
     private void addGammaSettingDialogListeners() {
@@ -339,6 +373,10 @@ public class MenuController {
         });
 
         smoothingSettingsDialog.getCancelButton().addActionListener(e -> smoothingSettingsDialog.setVisible(false));
+    }
+
+    private void onAbout() {
+        aboutDialog.setVisible(true);
     }
 
     private void onOpenFile() {
@@ -467,6 +505,10 @@ public class MenuController {
 
     private void onOrderedDithreringFilter() {
         orderedDitheringSettingsDialog.setVisible(true);
+    }
+
+    private void onOilPaintingFilter() {
+        oilPainitingSettingsDialog.setVisible(true);
     }
 
     private void onWaterColorFilter() {

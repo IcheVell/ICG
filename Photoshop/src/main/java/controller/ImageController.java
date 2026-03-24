@@ -30,7 +30,12 @@ public class ImageController extends MouseAdapter {
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        filterModel.setMode(Mode.ORIGINAL);
+        if (filterModel.getMode() == Mode.ORIGINAL) {
+            filterModel.setMode(Mode.FILTERED);
+        } else {
+            filterModel.setMode(Mode.ORIGINAL);
+        }
+
         menuBar.getViewMenu().getOriginalImageItem().setSelected(true);
         imagePanel.repaint();
     }

@@ -16,6 +16,7 @@ public class FilterMenu extends JMenu {
     private JRadioButtonMenuItem ditheringItem;
     private JRadioButtonMenuItem orderedDitheringItem;
     private JRadioButtonMenuItem waterColorItem;
+    private JRadioButtonMenuItem oilPaintingItem;
     
     private ButtonGroup filterButtonGroup;
 
@@ -35,6 +36,7 @@ public class FilterMenu extends JMenu {
         ditheringItem = new JRadioButtonMenuItem("Dithering");
         orderedDitheringItem = new JRadioButtonMenuItem("Ordered Dithering");
         waterColorItem = new JRadioButtonMenuItem("Water Color");
+        oilPaintingItem = new JRadioButtonMenuItem("Oil Painting");
 
         filterButtonGroup.add(grayscaleItem);
         filterButtonGroup.add(invertItem);
@@ -47,6 +49,7 @@ public class FilterMenu extends JMenu {
         filterButtonGroup.add(ditheringItem);
         filterButtonGroup.add(orderedDitheringItem);
         filterButtonGroup.add(waterColorItem);
+        filterButtonGroup.add(oilPaintingItem);
 
         add(grayscaleItem);
         add(invertItem);
@@ -59,50 +62,55 @@ public class FilterMenu extends JMenu {
         add(ditheringItem);
         add(orderedDitheringItem);
         add(waterColorItem);
+        add(oilPaintingItem);
     }
 
-    public JMenuItem getGrayscaleItem() {
+    public JRadioButtonMenuItem getGrayscaleItem() {
         return grayscaleItem;
     }
 
-    public JMenuItem getInvertItem() {
+    public JRadioButtonMenuItem getInvertItem() {
         return invertItem;
     }
 
-    public JMenuItem getSmoothingItem() {
+    public JRadioButtonMenuItem getSmoothingItem() {
         return smoothingItem;
     }
 
-    public JMenuItem getSharpenItem() {
+    public JRadioButtonMenuItem getSharpenItem() {
         return sharpenItem;
     }
 
-    public JMenuItem getEmbossItem() {
+    public JRadioButtonMenuItem getEmbossItem() {
         return embossItem;
     }
 
-    public JMenuItem getGammaItem() {
+    public JRadioButtonMenuItem getGammaItem() {
         return gammaItem;
     }
 
-    public JMenuItem getRobertsEdgeItem() {
+    public JRadioButtonMenuItem getRobertsEdgeItem() {
         return robertsEdgeItem;
     }
 
-    public JMenuItem getSobelsEdgeItem() {
+    public JRadioButtonMenuItem getSobelsEdgeItem() {
         return sobelsEdgeItem;
     }
 
-    public JMenuItem getDitheringItem() {
+    public JRadioButtonMenuItem getDitheringItem() {
         return ditheringItem;
     }
 
-    public JMenuItem getOrderedDitheringItem() {
+    public JRadioButtonMenuItem getOrderedDitheringItem() {
         return orderedDitheringItem;
     }
 
-    public JMenuItem getWaterColorItem() {
+    public JRadioButtonMenuItem getWaterColorItem() {
         return waterColorItem;
+    }
+
+    public JRadioButtonMenuItem getOilPaintingItem() {
+        return oilPaintingItem;
     }
 
     public ButtonGroup getFilterButtonGroup() {

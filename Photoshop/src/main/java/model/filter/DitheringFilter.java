@@ -17,9 +17,9 @@ public class DitheringFilter implements Filter {
         final int w = image.getWidth();
         final int h = image.getHeight();
 
-        final int qR = clamp(filterModel.getQuantsR(), 2, 128);
-        final int qG = clamp(filterModel.getQuantsG(), 2, 128);
-        final int qB = clamp(filterModel.getQuantsB(), 2, 128);
+        final int qR = filterModel.getQuantsR();
+        final int qG = filterModel.getQuantsG();
+        final int qB = filterModel.getQuantsB();
 
         BufferedImage result = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
         
@@ -52,7 +52,7 @@ public class DitheringFilter implements Filter {
 
                 float r = ((rgb >>> 16) & 0xFF) + errR[x] + carryR;
                 float g = ((rgb >>> 8)  & 0xFF) + errG[x] + carryG;
-                float b = ( rgb         & 0xFF) + errB[x] + carryB;
+                float b = ( rgb & 0xFF) + errB[x] + carryB;
 
                 int newR = quantizeToLevels(r, qR);
                 int newG = quantizeToLevels(g, qG);
@@ -127,9 +127,5 @@ public class DitheringFilter implements Filter {
         if (idx > levels) idx = levels;
 
         return Math.round(idx * 255f / levels);
-    }
-
-    private static int clamp(int v, int lo, int hi) {
-        return Math.max(lo, Math.min(hi, v));
     }
 }

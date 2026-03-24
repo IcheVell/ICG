@@ -19,6 +19,7 @@ public class ToolPanel extends JPanel {
     private JRadioButtonMenuItem ditheringFilterItem;
     private JRadioButtonMenuItem orderedDitheringFilterItem;
     private JRadioButtonMenuItem waterColorFilterItem;
+    private JRadioButtonMenuItem oilPaintingFilterItem;
     private JRadioButtonMenuItem rotateModifyItem;
     private JRadioButtonMenuItem resizeModifyItem;
 
@@ -42,6 +43,7 @@ public class ToolPanel extends JPanel {
         ditheringFilterItem = new JRadioButtonMenuItem("Dithering");
         orderedDitheringFilterItem = new JRadioButtonMenuItem("Ordered Dithering");
         waterColorFilterItem = new JRadioButtonMenuItem("Water Color");
+        oilPaintingFilterItem = new JRadioButtonMenuItem("Oil Painting");
 
         filterGroup.add(grayscaleFilterItem);
         filterGroup.add(invertFilterItem);
@@ -66,6 +68,7 @@ public class ToolPanel extends JPanel {
         filterPopupMenu.add(ditheringFilterItem);
         filterPopupMenu.add(orderedDitheringFilterItem);
         filterPopupMenu.add(waterColorFilterItem);
+        filterPopupMenu.add(oilPaintingFilterItem);
 
         modifyButton = new JButton("Modify");
         modifyButton.setFocusable(false);
@@ -146,6 +149,10 @@ public class ToolPanel extends JPanel {
 
     public JRadioButtonMenuItem getWaterColorFilterItem() {
         return waterColorFilterItem;
+    }
+
+    public JRadioButtonMenuItem getOilPaintingFilterItem() {
+        return oilPaintingFilterItem;
     }
 
     public JRadioButtonMenuItem getRotateModifyItem() {

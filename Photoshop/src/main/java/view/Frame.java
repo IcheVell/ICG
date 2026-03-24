@@ -43,9 +43,3 @@
             return imagePanel;
         }
     }
- // click by image go to original OK
-    // fix rotate rotate yourself OK
-    // gamma filter fix OK
-    // sobel threshold OK
-    // floyd 2 ???
-    // ordered dithering ??
