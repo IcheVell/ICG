@@ -40,12 +40,6 @@ public class MenuController {
     private void addActionListenersCurveModelConfig() {
         JButton okButton = curveModelDialog.getSplineConfigPanel().getOkButton();
         okButton.addActionListener(e -> {
-            if (curveModel.getM1() < 1) {
-                JOptionPane.showMessageDialog(curveModelDialog, "M1 MUST BE MORE THAN 0", "INVALID M1", JOptionPane.ERROR_MESSAGE);
-                return;
-            }
-
-
             if (curveModel.getControlPoints().size() <= 3) {
                 JOptionPane.showMessageDialog(curveModelDialog, "NOT ENOUGH CONTROL POINTS", "INVALID K", JOptionPane.ERROR_MESSAGE);
                 return;
@@ -71,6 +65,7 @@ public class MenuController {
         applyButton.addActionListener(e -> {
             if (curveModel.getControlPoints().size() <= 3) {
                 JOptionPane.showMessageDialog(curveModelDialog, "NOT ENOUGH CONTROL POINTS", "INVALID K", JOptionPane.ERROR_MESSAGE);
+                return;
             }
 
             curveModel.calculate3DPoints();
@@ -83,6 +78,14 @@ public class MenuController {
             frame.getMainPanel().repaint();
         });
 
+        JSpinner spinnerN = curveModelDialog.getSplineConfigPanel().getSpinnerN();
+        spinnerN.addChangeListener(e -> {
+            curveModel.setN(Integer.parseInt(spinnerN.getValue().toString()));
+            curveModel.calculateSplinePoints();
+
+            curveModelDialog.repaint();
+        });
+
         JSpinner spinnerM = curveModelDialog.getSplineConfigPanel().getSpinnerM();
         spinnerM.addChangeListener(e -> {
            curveModel.setM(Integer.parseInt(spinnerM.getValue().toString()));
@@ -91,7 +94,6 @@ public class MenuController {
         JSpinner spinnerM1 = curveModelDialog.getSplineConfigPanel().getSpinnerM1();
         spinnerM1.addChangeListener(e -> {
             curveModel.setM1(Integer.parseInt(spinnerM1.getValue().toString()));
-            System.out.println(curveModel.getM1());
         });
     }
 

@@ -22,10 +22,10 @@ public class CurveModel {
     private double scale = 1;
     private double ZN = 1;
 
-    private int N = -3;
+    private int N = 1;
     private int K = 0;
-    private int M = 0;
-    private int M1 = 0;
+    private int M = 2;
+    private int M1 = 1;
 
     private final double rotateScale = 0.05;
 
@@ -473,32 +473,54 @@ public class CurveModel {
     public void calculateM1CirclePoints() {
         additionalCircle3DPoints.clear();
 
-        if (M1 <= 1) {
+        if (M1 <= 1 || M < 2 || circle3DPoints.isEmpty()) {
             return;
         }
 
-        for (int base = 0; base < circle3DPoints.size(); base += M) {
+        double expectedDelta = 2.0 * Math.PI / M;
+        double twoPi = 2.0 * Math.PI;
+
+        for (int base = 0; base + M <= circle3DPoints.size(); base += M) {
             for (int seg = 0; seg < M; seg++) {
                 Point3D firstPoint = circle3DPoints.get(base + seg);
                 Point3D secondPoint = circle3DPoints.get(base + ((seg + 1) % M));
 
-                double firstAngle = Math.atan2(firstPoint.getY(), firstPoint.getX());
-                double secondAngle = Math.atan2(secondPoint.getY(), secondPoint.getX());
+                double x1 = firstPoint.getX();
+                double y1 = firstPoint.getY();
+                double z1 = firstPoint.getZ();
 
-                if (secondAngle <= firstAngle) {
-                    secondAngle += 2.0 * Math.PI;
+                double x2 = secondPoint.getX();
+                double y2 = secondPoint.getY();
+                double z2 = secondPoint.getZ();
+
+                double firstAngle = Math.atan2(y1, x1);
+                double secondAngle = Math.atan2(y2, x2);
+
+                double bestSecondAngle = secondAngle;
+                double bestDiff = Math.abs(bestSecondAngle - (firstAngle + expectedDelta));
+
+                for (int shift = -2; shift <= 2; shift++) {
+                    double candidate = secondAngle + shift * twoPi;
+                    double diff = Math.abs(candidate - (firstAngle + expectedDelta));
+                    if (diff < bestDiff) {
+                        bestDiff = diff;
+                        bestSecondAngle = candidate;
+                    }
                 }
 
-                double r = Math.sqrt(firstPoint.getX() * firstPoint.getX() + firstPoint.getY() * firstPoint.getY());
-
-                double z = firstPoint.getZ();
-                double step = (secondAngle - firstAngle) / M1;
-
                 for (int k = 1; k < M1; k++) {
-                    double angle = firstAngle + k * step;
+                    double t = (double) k / M1;
 
-                    double newX = r * Math.cos(angle);
-                    double newY = r * Math.sin(angle);
+                    double angle = firstAngle + (bestSecondAngle - firstAngle) * t;
+
+                    double radius1 = Math.hypot(x1, y1);
+                    double radius2 = Math.hypot(x2, y2);
+                    double radius = radius1 + (radius2 - radius1) * t;
+
+                    double z = z1 + (z2 - z1) * t;
+
+                    double newX = radius * Math.cos(angle);
+                    double newY = radius * Math.sin(angle);
 
                     additionalCircle3DPoints.add(new Point3D(newX, newY, z));
                 }

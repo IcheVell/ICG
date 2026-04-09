@@ -85,6 +85,7 @@ public class SplinePanel extends JPanel {
         g2d.setColor(Color.RED);
 
         Point2D prevPoint = null;
+
         for (Point2D point : curveModel.getSplinePoints()) {
             int scaledX = (int) (point.getX() * scale + offsetX);
             int scaledY = (int) (point.getY() * scale  + offsetY);

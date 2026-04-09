@@ -37,7 +37,6 @@ public class SplineController extends MouseAdapter {
             curveModel.getControlPoints().add(new Point(x, y));
 
             curveModel.setK(curveModel.getK() + 1);
-            curveModel.setN(curveModel.getN() + 1);
 
             configureDialog.getSplineConfigPanel().getSpinnerK().setValue(curveModel.getK());
             configureDialog.getSplineConfigPanel().getSpinnerN().setValue(curveModel.getN());
@@ -56,7 +55,6 @@ public class SplineController extends MouseAdapter {
                     .findFirst()
                     .ifPresent(controlPoint -> {
                         curveModel.getControlPoints().remove(controlPoint);
-                        curveModel.setN(curveModel.getN() - 1);
 
                         configureDialog.getSplineConfigPanel().getSpinnerN().setValue(curveModel.getN());
                         configureDialog.getSplineConfigPanel().getSpinnerK().setValue(curveModel.getControlPoints().size());

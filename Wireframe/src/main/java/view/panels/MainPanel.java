@@ -27,6 +27,10 @@ public class MainPanel extends JPanel {
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
 
+        if (curveModel.getControlPoints().isEmpty()) {
+            return;
+        }
+
         Graphics2D g2d = (Graphics2D) g;
 
         drawAxis(g2d);
@@ -62,12 +66,11 @@ public class MainPanel extends JPanel {
                 double depth1 = curveModel.getFigurePointsDepth().get(i);
                 double depth2 = curveModel.getFigurePointsDepth().get(j);
 
-                double averageDepth = (depth1 + depth2) / 2;
-                if (averageDepth <= 10) {
-                    g2d.setColor(Color.BLACK);
-                } else {
-                    g2d.setColor(Color.GRAY);
-                }
+                double averageDepth = (depth1 + depth2 - 18) / 4;
+                int val = (int) (128 * averageDepth);
+                val = Math.min(128, Math.max(0, val));
+
+                g2d.setColor(new Color(val, val, val));
                 
                 g2d.drawLine(x1, y1, x2, y2);
 
@@ -96,12 +99,11 @@ public class MainPanel extends JPanel {
                     double depth1 = curveModel.getCirclePointsDepth().get(base + seg);
                     double depth2 = curveModel.getCirclePointsDepth().get(base + ((seg + 1) % M));
 
-                    double averageDepth = (depth1 + depth2) / 2;
-                    if (averageDepth <= 10) {
-                        g2d.setColor(Color.BLACK);
-                    } else {
-                        g2d.setColor(Color.GRAY);
-                    }
+                    double averageDepth = (depth1 + depth2 - 18) / 4;
+                    int val = (int) (128 * averageDepth);
+                    val = Math.min(128, Math.max(0, val));
+
+                    g2d.setColor(new Color(val, val, val));
 
                     g2d.drawLine((int) startPoint.getX(), (int) startPoint.getY(), (int) endPoint.getX(), (int) endPoint.getY());
                 }
@@ -112,10 +114,7 @@ public class MainPanel extends JPanel {
 
         int additionalPerCircle = M * (M1 - 1);
 
-        for (int base = 0, additionalBase = 0;
-             base < mainPoints.size();
-             base += M, additionalBase += additionalPerCircle) {
-
+        for (int base = 0, additionalBase = 0; base < mainPoints.size(); base += M, additionalBase += additionalPerCircle) {
             for (int seg = 0; seg < M; seg++) {
                 Point2D currentPoint = mainPoints.get(base + seg);
 
@@ -127,26 +126,25 @@ public class MainPanel extends JPanel {
                     double depth1 = curveModel.getCirclePointsDepth().get(base + seg);
                     double depth2 = curveModel.getAdditionalCirclePointsDepth().get(segmentAdditionalBase + k);
 
-                    double averageDepth = (depth1 + depth2) / 2;
-                    if (averageDepth <= 10) {
-                        g2d.setColor(Color.BLACK);
-                    } else {
-                        g2d.setColor(Color.GRAY);
-                    }
+                    double averageDepth = (depth1 + depth2 - 18) / 4;
+                    int val = (int) (128 * averageDepth);
+                    val = Math.min(128, Math.max(0, val));
+
+                    g2d.setColor(new Color(val, val, val));
 
                     g2d.drawLine((int) currentPoint.getX(), (int) currentPoint.getY(), (int) midPoint.getX(), (int) midPoint.getY());
 
                     currentPoint = midPoint;
                 }
 
-                double depth2 = curveModel.getCirclePointsDepth().get(base + ((seg + 1) % M1));
-                double averageDepth = (depth2 + depth2) / 2;
+                double depth1 = curveModel.getCirclePointsDepth().get(base + seg);
+                double depth2 = curveModel.getCirclePointsDepth().get(base + ((seg + 1) % M));
 
-                if (averageDepth <= 10) {
-                    g2d.setColor(Color.BLACK);
-                } else {
-                    g2d.setColor(Color.GRAY);
-                }
+                double averageDepth = (depth1 + depth2 - 18) / 4;
+                int val = (int) (128 * averageDepth);
+                val = Math.min(128, Math.max(0, val));
+
+                g2d.setColor(new Color(val, val, val));
 
                 Point2D endPoint = mainPoints.get(base + ((seg + 1) % M));
 

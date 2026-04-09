@@ -26,11 +26,10 @@ public class SplineConfigPanel extends JPanel {
         spinnerK = new JSpinner(new SpinnerNumberModel(curveModel.getK(), 0, null, 1));
         spinnerK.setEnabled(false);
 
-        spinnerN = new JSpinner(new SpinnerNumberModel(curveModel.getN(), -3, null, 1));
-        spinnerN.setEnabled(false);
+        spinnerN = new JSpinner(new SpinnerNumberModel(curveModel.getN(), 1, null, 1));
 
-        spinnerM = new JSpinner(new SpinnerNumberModel(curveModel.getM(), 0, null, 1));
-        spinnerM1 = new JSpinner(new SpinnerNumberModel(curveModel.getM1(), 0, null, 1));
+        spinnerM = new JSpinner(new SpinnerNumberModel(curveModel.getM(), 2, null, 1));
+        spinnerM1 = new JSpinner(new SpinnerNumberModel(curveModel.getM1(), 1, null, 1));
 
         add(new JLabel("N: "));
         add(spinnerN);
