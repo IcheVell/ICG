@@ -66,11 +66,15 @@ public class MainPanel extends JPanel {
                 double depth1 = curveModel.getFigurePointsDepth().get(i);
                 double depth2 = curveModel.getFigurePointsDepth().get(j);
 
-                double averageDepth = (depth1 + depth2 - 18) / 4;
-                int val = (int) (128 * averageDepth);
-                val = Math.min(128, Math.max(0, val));
+                double averageDepth = (depth1 + depth2) / 2;
 
-                g2d.setColor(new Color(val, val, val));
+                double t = (averageDepth - 9) / (11 - 9);
+                t = Math.max(0.0, Math.min(1.0, t));
+
+                int val = (int) (30 + 190 * t);
+                val = Math.max(0, Math.min(255, val));
+
+                g2d.setColor(new Color(val, val, val));;
                 
                 g2d.drawLine(x1, y1, x2, y2);
 
@@ -99,11 +103,15 @@ public class MainPanel extends JPanel {
                     double depth1 = curveModel.getCirclePointsDepth().get(base + seg);
                     double depth2 = curveModel.getCirclePointsDepth().get(base + ((seg + 1) % M));
 
-                    double averageDepth = (depth1 + depth2 - 18) / 4;
-                    int val = (int) (128 * averageDepth);
-                    val = Math.min(128, Math.max(0, val));
+                    double averageDepth = (depth1 + depth2) / 2;
 
-                    g2d.setColor(new Color(val, val, val));
+                    double t = (averageDepth - 9) / (11 - 9);
+                    t = Math.max(0.0, Math.min(1.0, t));
+
+                    int val = (int) (30 + 190 * t);
+                    val = Math.max(0, Math.min(255, val));
+
+                    g2d.setColor(new Color(val, val, val));;
 
                     g2d.drawLine((int) startPoint.getX(), (int) startPoint.getY(), (int) endPoint.getX(), (int) endPoint.getY());
                 }
@@ -126,11 +134,15 @@ public class MainPanel extends JPanel {
                     double depth1 = curveModel.getCirclePointsDepth().get(base + seg);
                     double depth2 = curveModel.getAdditionalCirclePointsDepth().get(segmentAdditionalBase + k);
 
-                    double averageDepth = (depth1 + depth2 - 18) / 4;
-                    int val = (int) (128 * averageDepth);
-                    val = Math.min(128, Math.max(0, val));
+                    double averageDepth = (depth1 + depth2) / 2;
 
-                    g2d.setColor(new Color(val, val, val));
+                    double t = (averageDepth - 9) / (11 - 9);
+                    t = Math.max(0.0, Math.min(1.0, t));
+
+                    int val = (int) (30 + 190 * t);
+                    val = Math.max(0, Math.min(255, val));
+
+                    g2d.setColor(new Color(val, val, val));;
 
                     g2d.drawLine((int) currentPoint.getX(), (int) currentPoint.getY(), (int) midPoint.getX(), (int) midPoint.getY());
 
@@ -140,11 +152,15 @@ public class MainPanel extends JPanel {
                 double depth1 = curveModel.getCirclePointsDepth().get(base + seg);
                 double depth2 = curveModel.getCirclePointsDepth().get(base + ((seg + 1) % M));
 
-                double averageDepth = (depth1 + depth2 - 18) / 4;
-                int val = (int) (128 * averageDepth);
-                val = Math.min(128, Math.max(0, val));
+                double averageDepth = (depth1 + depth2) / 2;
 
-                g2d.setColor(new Color(val, val, val));
+                double t = (averageDepth - 9) / (11 - 9);
+                t = Math.max(0.0, Math.min(1.0, t));
+
+                int val = (int) (30 + 190 * t);
+                val = Math.max(0, Math.min(255, val));
+
+                g2d.setColor(new Color(val, val, val));;
 
                 Point2D endPoint = mainPoints.get(base + ((seg + 1) % M));
 

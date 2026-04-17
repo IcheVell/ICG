@@ -352,10 +352,10 @@ public class CurveModel {
         rotatedAxis3DPoints.clear();
         rotatedAdditionalCircle3DPoints.clear();
 
-        double[][] rotateX = MatrixFactory.create(MatrixType.ROTATE_X, getModelRadiansAngleY());
-        double[][] rotateY = MatrixFactory.create(MatrixType.ROTATE_Y, getModelRadiansAngleX());
+        double[][] rotateX = MatrixFactory.create(MatrixType.ROTATE_X, getModelRadiansAngleX());
+        double[][] rotateY = MatrixFactory.create(MatrixType.ROTATE_Y, getModelRadiansAngleY());
 
-        double[][] rotateMatrix = mulMatrices(rotateX, rotateY);
+        double[][] rotateMatrix = mulMatrices(rotateY, rotateX);
 
         rotate3DPointsArray(figure3DPoints, rotatedFigure3DPoints, rotateMatrix);
         rotate3DPointsArray(circle3DPoints, rotatedCircle3DPoints, rotateMatrix);

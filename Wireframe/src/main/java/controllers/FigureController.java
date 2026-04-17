@@ -58,8 +58,8 @@ public class FigureController extends MouseAdapter {
 
         double scale = curveModel.getRotateScale();
 
-        double rotateRadiansX = Math.toRadians(dx * scale);
-        double rotateRadiansY = Math.toRadians(dy * scale);
+        double rotateRadiansY = Math.toRadians(dx * scale);
+        double rotateRadiansX = Math.toRadians(dy * scale);
 
         curveModel.setModelRadiansAngleX(rotateRadiansX + curveModel.getModelRadiansAngleX());
         curveModel.setModelRadiansAngleY(rotateRadiansY + curveModel.getModelRadiansAngleY());
