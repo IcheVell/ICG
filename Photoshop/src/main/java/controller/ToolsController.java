@@ -43,6 +43,7 @@ public class ToolsController {
         toolsPanel.getDitheringFilterItem().setAction(actionFactory.getAction(Command.DITHERING));
         toolsPanel.getOrderedDitheringFilterItem().setAction(actionFactory.getAction(Command.ORDERED_DITHERING));
         toolsPanel.getWaterColorFilterItem().setAction(actionFactory.getAction(Command.WATERCOLOR));
+        toolsPanel.getOilPaintingFilterItem().setAction(actionFactory.getAction(Command.OIL_PAINTING));
     }
 
 

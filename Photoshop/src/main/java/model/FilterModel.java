@@ -18,6 +18,7 @@ public class FilterModel {
     private int orderedQuantsR = 2;
     private int orderedQuantsG = 2;
     private int orderedQuantsB = 2;
+    private int oilBinsCount = 2;
     private Mode mode = Mode.ORIGINAL;
     private int rotateDegrees = 0;
     private Object renderValue = RenderingHints.VALUE_INTERPOLATION_BILINEAR;
@@ -83,6 +84,10 @@ public class FilterModel {
         return renderValue;
     }
 
+    public int getOilBinsCount() {
+        return oilBinsCount;
+    }
+
     public void setOriginalImage(BufferedImage image) {
         this.originalImage = image;
     }
@@ -139,6 +144,10 @@ public class FilterModel {
         this.renderValue = renderValue;
     }
 
+    public void setOilBinsCount(int oilBinsCount) {
+        this.oilBinsCount = oilBinsCount;
+    }
+
     public void applyFilter(Filter filter) {
         filteredImage = filter.applyFilter(originalImage);
     }
@@ -176,7 +185,7 @@ public class FilterModel {
                 int iy = (int) Math.round(sy);
 
                 int rgb = (ix >= 0 && iy >= 0 && ix < w && iy < h) ? originalImage.getRGB(ix, iy) : bg;
-                result.setRGB(x, y, rgb);
+                result.setRGB(x, y, rgb);                                                                                                                                                                   
             }
         }
 

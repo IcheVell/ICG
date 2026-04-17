@@ -1,10 +1,10 @@
 package view.menu;
 
+import view.menu.help.HelpMenu;
 import view.menu.file.FileMenu;
 import view.menu.filter.FilterMenu;
 import view.menu.modify.ModifyMenu;
 import view.menu.view.ViewMenu;
-import view.toolspanel.ToolPanel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -14,12 +14,14 @@ public class MyMenuBar extends JMenuBar {
     private final ViewMenu viewMenu;
     private final ModifyMenu modifyMenu;
     private final FilterMenu filterMenu;
+    private final HelpMenu helpMenu;
 
     public MyMenuBar() {
         fileMenu = new FileMenu();
         viewMenu = new ViewMenu();
         filterMenu = new FilterMenu();
         modifyMenu = new ModifyMenu(filterMenu.getFilterButtonGroup());
+        helpMenu = new HelpMenu();
 
         setBackground(Color.LIGHT_GRAY);
 
@@ -27,6 +29,7 @@ public class MyMenuBar extends JMenuBar {
         add(viewMenu);
         add(modifyMenu);
         add(filterMenu);
+        add(helpMenu);
     }
 
     public FileMenu getFileMenu() {
@@ -43,5 +46,9 @@ public class MyMenuBar extends JMenuBar {
 
     public ModifyMenu getModifyMenu() {
         return modifyMenu;
+    }
+
+    public HelpMenu getHelpMenu() {
+        return helpMenu;
     }
 }
