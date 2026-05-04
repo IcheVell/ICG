@@ -31,4 +31,4 @@ public class Frame extends JFrame {
     }
 
     public MainPanel getMainPanel() {return mainPanel;}
-}
+} // depth by point
