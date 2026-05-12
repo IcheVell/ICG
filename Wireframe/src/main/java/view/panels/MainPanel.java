@@ -53,32 +53,17 @@ public class MainPanel extends JPanel {
     private void drawGeneratrix(Graphics2D g2d) {
         for (int i = 0; i < curveModel.getM(); i++) {
             Point2D startPoint = curveModel.getScreenFigurePoints().get(i);
+            double depth1 = curveModel.getFigurePointsDepth().get(i);
 
             for (int j = i + curveModel.getM(); j < curveModel.getScreenFigurePoints().size(); j += curveModel.getM()) {
                 Point2D endPoint = curveModel.getScreenFigurePoints().get(j);
 
-                int x1 = (int) startPoint.getX();
-                int y1 = (int) startPoint.getY();
-
-                int x2 = (int) endPoint.getX();
-                int y2 = (int) endPoint.getY();
-
-                double depth1 = curveModel.getFigurePointsDepth().get(i);
                 double depth2 = curveModel.getFigurePointsDepth().get(j);
 
-                double averageDepth = (depth1 + depth2) / 2;
-
-                double t = (averageDepth - 9) / (11 - 9);
-                t = Math.max(0.0, Math.min(1.0, t));
-
-                int val = (int) (30 + 190 * t);
-                val = Math.max(0, Math.min(255, val));
-
-                g2d.setColor(new Color(val, val, val));;
-                
-                g2d.drawLine(x1, y1, x2, y2);
+                drawLineBresenham(startPoint, endPoint, depth1, depth2, g2d);
 
                 startPoint = endPoint;
+                depth1 = depth2;
             }
         }
     }
@@ -103,17 +88,7 @@ public class MainPanel extends JPanel {
                     double depth1 = curveModel.getCirclePointsDepth().get(base + seg);
                     double depth2 = curveModel.getCirclePointsDepth().get(base + ((seg + 1) % M));
 
-                    double averageDepth = (depth1 + depth2) / 2;
-
-                    double t = (averageDepth - 9) / (11 - 9);
-                    t = Math.max(0.0, Math.min(1.0, t));
-
-                    int val = (int) (30 + 190 * t);
-                    val = Math.max(0, Math.min(255, val));
-
-                    g2d.setColor(new Color(val, val, val));;
-
-                    g2d.drawLine((int) startPoint.getX(), (int) startPoint.getY(), (int) endPoint.getX(), (int) endPoint.getY());
+                    drawLineBresenham(startPoint, endPoint, depth1, depth2, g2d);
                 }
             }
 
@@ -126,45 +101,26 @@ public class MainPanel extends JPanel {
             for (int seg = 0; seg < M; seg++) {
                 Point2D currentPoint = mainPoints.get(base + seg);
 
+                double depth1 = curveModel.getCirclePointsDepth().get(base + seg);
+
                 int segmentAdditionalBase = additionalBase + seg * (M1 - 1);
 
                 for (int k = 0; k < M1 - 1; k++) {
                     Point2D midPoint = additionalPoints.get(segmentAdditionalBase + k);
 
-                    double depth1 = curveModel.getCirclePointsDepth().get(base + seg);
                     double depth2 = curveModel.getAdditionalCirclePointsDepth().get(segmentAdditionalBase + k);
 
-                    double averageDepth = (depth1 + depth2) / 2;
-
-                    double t = (averageDepth - 9) / (11 - 9);
-                    t = Math.max(0.0, Math.min(1.0, t));
-
-                    int val = (int) (30 + 190 * t);
-                    val = Math.max(0, Math.min(255, val));
-
-                    g2d.setColor(new Color(val, val, val));;
-
-                    g2d.drawLine((int) currentPoint.getX(), (int) currentPoint.getY(), (int) midPoint.getX(), (int) midPoint.getY());
+                    drawLineBresenham(currentPoint, midPoint, depth1, depth2, g2d);
 
                     currentPoint = midPoint;
+                    depth1 = depth2;
                 }
 
-                double depth1 = curveModel.getCirclePointsDepth().get(base + seg);
                 double depth2 = curveModel.getCirclePointsDepth().get(base + ((seg + 1) % M));
-
-                double averageDepth = (depth1 + depth2) / 2;
-
-                double t = (averageDepth - 9) / (11 - 9);
-                t = Math.max(0.0, Math.min(1.0, t));
-
-                int val = (int) (30 + 190 * t);
-                val = Math.max(0, Math.min(255, val));
-
-                g2d.setColor(new Color(val, val, val));;
 
                 Point2D endPoint = mainPoints.get(base + ((seg + 1) % M));
 
-                g2d.drawLine((int) currentPoint.getX(), (int) currentPoint.getY(), (int) endPoint.getX(), (int) endPoint.getY());
+                drawLineBresenham(currentPoint, endPoint, depth1, depth2, g2d);
             }
         }
     }
@@ -182,5 +138,54 @@ public class MainPanel extends JPanel {
         int y2 = (int) (offsetY - endPoint.getY() * scale);
 
         g2d.drawLine(x1, y1, x2, y2);
+    }
+
+    private void drawLineBresenham(Point2D startPoint, Point2D endPoint, double startDepth, double endDepth, Graphics2D g2d) {
+        int x1 = (int) startPoint.getX();
+        int y1 = (int) startPoint.getY();
+        int x2 = (int) endPoint.getX();
+        int y2 = (int) endPoint.getY();
+
+        int dx = Math.abs(x2 - x1);
+        int dy = Math.abs(y2 - y1);
+
+        int totalSteps = Math.max(dx, dy);
+
+        int sx = x1 < x2 ? 1 : -1;
+        int sy = y1 < y2 ? 1 : -1;
+        int err = dx - dy;
+
+        int x = x1, y = y1;
+
+        double zStep = (startDepth - endDepth) / totalSteps;
+
+        int iter = 0;
+        while (x != x2 || y != y2) {
+            double depth = startDepth - zStep * iter;
+
+            double t = (depth - 9) / (11 - 9);
+            t = Math.max(0.0, Math.min(1.0, t));
+
+            int val = (int) (30 + 190 * t);
+            val = Math.max(0, Math.min(255, val));
+
+            g2d.setColor(new Color(val, val, val));
+
+            g2d.fillRect(x, y, 1, 1);
+
+            int e2 = 2 * err;
+
+            if (e2 > -dy) {
+                err -= dy;
+                x += sx;
+            }
+
+            if (e2 < dx) {
+                err += dx;
+                y += sy;
+            }
+
+            iter++;
+        }
     }
 }

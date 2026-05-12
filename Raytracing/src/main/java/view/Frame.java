@@ -1,7 +1,8 @@
 package view;
 
-import models.CurveModel;
-import view.dialogs.ConfigureDialog;
+import model.Camera;
+import model.RenderModel;
+import model.SceneModel;
 import view.menu.MyMenuBar;
 import view.panels.MainPanel;
 
@@ -12,17 +13,17 @@ public class Frame extends JFrame {
     private final MyMenuBar menuBar;
     private final MainPanel mainPanel;
 
-    public Frame(CurveModel curveModel) {
+    public Frame(SceneModel sceneModel, RenderModel renderModel, Camera camera) {
         menuBar = new MyMenuBar();
-        mainPanel = new MainPanel(curveModel);
+        mainPanel = new MainPanel(sceneModel, renderModel, camera);
 
-        setLayout(new BorderLayout());
-        setTitle("Wireframe app");
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setTitle("Raytracing app");
         setMinimumSize(new Dimension(640, 480));
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLayout(new BorderLayout());
         setResizable(true);
-
         setJMenuBar(menuBar);
+
         add(mainPanel, BorderLayout.CENTER);
     }
 
@@ -30,5 +31,7 @@ public class Frame extends JFrame {
         return menuBar;
     }
 
-    public MainPanel getMainPanel() {return mainPanel;}
-} // depth by point
+    public MainPanel getMainPanel() {
+        return mainPanel;
+    }
+} // зернистость + сцены посложнее
